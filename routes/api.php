@@ -86,8 +86,36 @@
 | DELETE /api/kartu-pelajar/{id}     Hapus kartu
 |   Response 200: { "message": "Kartu pelajar dihapus" }
 |
+|--------------------------------------------------------------------------
+| GURU
+|--------------------------------------------------------------------------
+| GET    /api/guru           List semua guru + kelas
+|   Response 200: [{ id, nama, nip, mapel, id_kelas, kelas: {...} }]
+|
+| POST   /api/guru           Buat guru baru
+|   Body: { "nama": "Sri Wahyuni", "nip": "198001012005012001", "mapel": "Matematika", "id_kelas": 1 }
+|     - nama: required, string, max:255
+|     - nip: optional, string, unique
+|     - mapel: optional, string, max:255
+|     - id_kelas: optional, exists:kelas,id
+|   Response 201: { id, nama, nip, mapel, id_kelas, kelas: {...} }
+|   cURL:
+|   curl -X POST http://localhost:8000/api/guru \
+|     -H "Content-Type: application/json" \
+|     -d '{"nama":"Sri Wahyuni","nip":"198001012005012001","mapel":"Matematika","id_kelas":1}'
+|
+| GET    /api/guru/{id}      Detail 1 guru + kelas
+|
+| PUT    /api/guru/{id}      Update guru (field optional, nip tetap unique)
+|   Body: { "nama": "Sri Wahyuni S.Pd", "mapel": "Matematika" }
+|   Response 200: { id, nama, nip, ... }
+|
+| DELETE /api/guru/{id}      Hapus guru
+|   Response 200: { "message": "Guru dihapus" }
+|
 */
 
+use App\Http\Controllers\Api\GuruController;
 use App\Http\Controllers\Api\KartuPelajarController;
 use App\Http\Controllers\Api\KelasController;
 use App\Http\Controllers\Api\SiswaController;
@@ -106,3 +134,6 @@ Route::apiResource('siswa', SiswaController::class);
 
 // CRUD Kartu Pelajar: GET|POST /kartu-pelajar, GET|PUT|PATCH|DELETE /kartu-pelajar/{kartu_pelajar}
 Route::apiResource('kartu-pelajar', KartuPelajarController::class);
+
+// CRUD Guru: GET|POST /guru, GET|PUT|PATCH|DELETE /guru/{guru}
+Route::apiResource('guru', GuruController::class);
